@@ -15,7 +15,7 @@ Hello {{battleTag}}!</h1>
 Load
 </button>
 
-<select ng-disabled="!selectedHero" ng-model="selectedHero" ng-options="heroe.name for heroe in profileData.heroes" ng-change="selectHero()"><option value="">-- 請選擇 Hero --</option></select>
+<select ng-model="selectedHero" ng-options="heroe.name for heroe in profileData.heroes" ng-change="selectHero()"><option value="">-- 請選擇 Hero --</option></select>
 
 
 <div ng-repeat="(key, value) in selectedHero">
@@ -33,7 +33,7 @@ Load
 <div style="display:none" ng-repeat="(key, value) in itemAttrs">
 {{key}} : {{value}}
 </div>
-<select  ng-disabled="!itemAttrs" ng-model="selectedAttr" ng-options="attrKey for (attrKey, attrValue) in itemAttrs" ng-change="drawAttr()"><option value="">show all</option></select>
+<select ng-model="selectedAttr" ng-options="attrKey for (attrKey, attrValue) in itemAttrs" ng-change="drawAttr()"><option value="">show all</option></select>
 <div class='draw' id='chart'>
 </div>
 
