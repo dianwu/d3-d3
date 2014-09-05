@@ -1,6 +1,30 @@
-d3-d3
-=====
-透過D3js 建立D3的視覺化圖表
+# D3 D3
 
-demo 
-http://dianwu.github.io/d3-d3/d3.html
+Diablo3 with D3js
+
+## Getting Started
+Download the [production version][min] or the [development version][max].
+
+[min]: https://raw.github.com/dianwu/d3-d3/master/dist/d3-d3.min.js
+[max]: https://raw.github.com/dianwu/d3-d3/master/dist/d3-d3.js
+
+In your web page:
+
+```html
+<script src="jquery.js"></script>
+<script src="dist/d3-d3.min.js"></script>
+<script>
+jQuery(function($) {
+  $.awesome(); // "awesome"
+});
+</script>
+```
+
+## Documentation
+_(Coming soon)_
+
+## Examples
+_(Coming soon)_
+
+## Release History
+_(Nothing yet)_
