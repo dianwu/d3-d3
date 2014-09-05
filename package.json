@@ -1,0 +1,36 @@
+{
+  "name": "jquery-plugin",
+  "version": "0.0.0-ignored",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt qunit"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-htmlmin": "^0.3.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-qunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-watch": "~0.4.0",
+    "grunt-scp": "^0.1.7"
+  },
+  "description": "Diablo3 with D3js",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dianwu/d3-d3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dianwu/d3-d3/issues"
+  },
+  "homepage": "https://github.com/dianwu/d3-d3"
+}
