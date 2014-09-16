@@ -1,4 +1,4 @@
-/*! D3 D3 - v0.1.0 - 2014-09-06
+/*! D3 D3 - v0.1.0 - 2014-09-14
 * https://github.com/dianwu/d3-d3
 * Copyright (c) 2014 dianwu; Licensed MIT */
 // DianTW-3588
@@ -20,9 +20,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 	}];
 	$scope.myServer = $scope.servers[2];
 	$scope.profileData = {};
-	$scope.battleTag = ($location.search() || {
-		battleTag: ''
-	}).battleTag;
+	$scope.battleTag = 'DianTW-3588';
 	$scope.selectedHero = '';
 	$scope.selectedAttr = '';
 	$scope.itemDatas = {};
@@ -53,9 +51,8 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 			// this callback will be called asynchronously
 			// when the response is available
 			$scope.heroData = data;
-			console.log('$scope.heroData.items', $scope.heroData);
+			$scope.itemDatas={};
 			angular.forEach(PARTS, function(part) {
-				console.log('part :', part, data.items[part]);
 				loadItemDate(data.items[part].tooltipParams);
 			});
 		}).
@@ -64,7 +61,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 			// or server returns response with an error status.
 		});
 	}
-
+ 
 	function loadItemDate(itemId) {
 		$http.jsonp(
 			'https://' + $scope.myServer.host + ITEM_PATH + itemId + callBack
@@ -74,11 +71,10 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 			// when the response is available
 			$scope.itemDatas[itemId] = data;
 			var attr;
-			console.log('=== loadItemDate ===');
 			angular.forEach(data.attributesRaw, function(attrValue, attrKey) {
 				$scope.itemAttrs[attrKey] = $scope.itemAttrs[attrKey] || [];
+				attrValue.id = itemId;
 				$scope.itemAttrs[attrKey].push(attrValue);
-				console.log('attrRaw', attrKey, $scope.itemAttrs[attrKey].length);
 				// attr.max = attr.max || 0;
 				// attr.min = attr.min || 0;
 				// attr.max += attrValue.max;
@@ -96,10 +92,14 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 		loadHero($scope.selectedHero.id);
 	};
 
-	$scope.drawAttr = function() {
+	function getMyItem(itemId) {
+		return $scope.itemDatas[itemId];
+	}
+
+	$scope.drawAttr = function(v) {
 		var width = 960,
 			height = 500,
-			radius = Math.min(width, height) / 2;
+			radius = Math.min(width, height) / 2 - 50;
 
 		var arc = d3.svg.arc()
 			.outerRadius(radius - 10)
@@ -108,9 +108,11 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 		var pie = d3.layout.pie()
 			.sort(null)
 			.value(function(d) {
+				// var attr=getMyItem(d).attributesRaw[$scope.selectedAttr];
+				// console.log('pie', getMyItem(d), $scope.selectedAttr);
 				return (d.max + d.min) / 2;
 			});
-
+		var pieData = pie($scope.selectedAttr);
 		var color = d3.scale.category20b();
 
 		var svg = d3.select('#chart')
@@ -121,15 +123,104 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 			.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 		var g = svg.selectAll(".arc")
-			.data(pie($scope.selectedAttr))
+			.data(pieData)
 			.enter().append("g")
 			.attr("class", "arc");
 
 		g.append("path")
 			.attr("d", arc)
 			.style("fill", function(d, i) {
-				console.log('color', i); return color(i);
-			});  
+				return color(i);
+			});
+
+		var label_group = svg.append("svg:g")
+			.attr("class", "label_group")
+			.attr("transform", "translate(0, 0)");
+
+		var textOffset = 14;
+		var r = 100;
+		var valueLabels = label_group.selectAll("text.value").data(pieData)
+			.attr("dy", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+					return 5;
+				} else {
+					return -7;
+				}
+			})
+			.attr("text-anchor", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+					return "beginning";
+				} else {
+					return "end";
+				}
+			})
+			.text(function(d) {
+				return '1';
+			});
+
+		valueLabels.enter().append("svg:text")
+			.attr("class", "value")
+			.attr("transform", function(d) {
+				return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (radius + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (radius + textOffset) + ")";
+			})
+			.attr("dy", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+					return 5;
+				} else {
+					return -7;
+				}
+			})
+			.attr("text-anchor", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+					return "beginning";
+				} else {
+					return "end";
+				}
+			}).text(function(d) {
+				return Math.round(((d.data.max + d.data.min) / 2) * 100) / 100;
+			});
+
+		valueLabels.exit().remove();
+
+		var nameLabels = label_group.selectAll("text.units").data(pieData)
+			.attr("dy", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+					return 17;
+				} else {
+					return 5;
+				}
+			})
+			.attr("text-anchor", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+					return "beginning";
+				} else {
+					return "end";
+				}
+			}).text(function(d) {
+				return d.name;
+			});
+
+		nameLabels.enter().append("svg:text")
+			.attr("class", "units")
+			.attr("transform", function(d) {
+				return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (radius + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (radius + textOffset) + ")";
+			})
+			.attr("dy", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+					return 17;
+				} else {
+					return 5;
+				}
+			})
+			.attr("text-anchor", function(d) {
+				if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+					return "beginning";
+				} else {
+					return "end";
+				}
+			}).text(function(d) {
+				return $scope.itemDatas[d.data.id].name;
+			});
 	};
 }
 

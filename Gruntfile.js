@@ -22,8 +22,7 @@ module.exports = function(grunt) {
           collapseWhitespace: true
         },
         files: { // Dictionary of files
-          'dist/d3.html': 'src/d3.html', // 'destination': 'source'
-          'dist/index.html': 'src/index.html',
+          'dist/d3.html': 'html/d3.html', // 'destination': 'source'
         }
       },
       // dev: { // Another target
@@ -41,6 +40,10 @@ module.exports = function(grunt) {
         src: ['src/js/*.js'],
         dest: 'dist/js/d3API.js'
       },
+      css: {
+        src: ['css/*.css'],
+        dest: 'dist/css/all.css'
+      }
     },
     uglify: {
       options: {
@@ -75,11 +78,24 @@ module.exports = function(grunt) {
       },
       src: {
         files: '<%= jshint.src.src %>',
-        tasks: ['jshint:src', 'qunit','concat']
+        tasks: ['jshint:src', 'qunit', 'concat','copy'],
+        options:{
+          livereload:true
+        }
       },
       html: {
-        files: 'src/*.html',
-        tasks: ['htmlmin']
+        files: 'html/*.html',
+        tasks: ['htmlmin','copy'],
+        options:{
+          livereload:true
+        }
+      },
+      css:{
+        files: ['css/*.css'],
+        tasks: ['concat:css','copy'],
+        options:{
+          livereload:true
+        }
       },
       test: {
         files: '<%= jshint.test.src %>',
@@ -102,6 +118,19 @@ module.exports = function(grunt) {
         }]
       },
     },
+    copy: {
+      main: {
+        files: [
+          // includes files within path and its sub-directories
+          {
+            expand: true,
+            src: ['**/*'],
+             cwd: 'dist/',
+            dest: 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\htdocs'
+          }
+        ]
+      }
+    }
   });
 
   // These plugins provide necessary tasks.
@@ -113,6 +142,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-scp');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'concat', 'uglify', 'htmlmin']);
