@@ -1,0 +1,27 @@
+{
+  "name": "d3-d3",
+  "title": "D3 D3",
+  "description": "Diablo3 with D3js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/dianwu/d3-d3",
+  "author": {
+    "name": "dianwu",
+    "email": "elgoogdian@gmail.com",
+    "url": "http://dian-wu.blogspot.tw/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dianwu/d3-d3.git"
+  },
+  "bugs": "https://github.com/dianwu/d3-d3/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/dianwu/d3-d3/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
