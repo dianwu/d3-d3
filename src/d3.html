@@ -1,17 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="MyApp" ng-controller="MyCtrl as myCtrl">
+<head>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://tw.battle.net/d3/static/js/tooltips.js"></script>
 <script src="js/d3API.js"></script>
-
+<title>Diablo 3 width D3js</title>
+</head>
+<body>
 Diablo 3
-<div ng-app="MyApp" ng-controller="MyCtrl as myCtrl">
+<div >
 <div ng-view>
 </div>
 Server : <select ng-model="myServer" ng-options="server.name for server in servers"></select>
 Battle Tag : <input ng-model="battleTag" placeholder="Enter your BattleTag" type="text" value="DianTW-3588"/>
 <h1>
 Hello {{battleTag}}!</h1>
-<button ng-click="myCtrl.loadBattleTag()">
+<button ng-click="myCtrl.loadBattleTag()"> 
 Load
 </button>
 
@@ -34,8 +40,19 @@ Load
 {{key}} : {{value}}
 </div>
 <select ng-model="selectedAttr" ng-options="attrKey for (attrKey, attrValue) in itemAttrs" ng-change="drawAttr()"><option value="">show all</option></select>
+<div>
+	<span id='itemInfo' ng-repeat="(key, value) in selectedAttr">
+		<span>
+			<a host="{{myServer.host}}" style="display: inline-block;width: 80px;text-align: center;" href="http://{{myServer.host}}/d3/zh/tooltip/{{itemDatas[value.id].tooltipParams}}" data-d3tooltip="{{itemDatas[value.id].tooltipParams}}" >
+				<img src="http://media.blizzard.com/d3/icons/items/large/{{itemDatas[value.id].icon}}.png"/>
+				<div style="display: inline-block;">{{itemDatas[value.id].name}}</div></a>
+		</span> 
+	</span>
+</div>
 <div class='draw' id='chart'>
 </div>
 
 </div>
 <!-- ng-app end -->
+</body>
+</html>
