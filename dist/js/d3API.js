@@ -1,8 +1,8 @@
-/*! D3 D3 - v0.1.0 - 2014-09-14
+/*! D3 D3 - v0.1.0 - 2014-09-20
 * https://github.com/dianwu/d3-d3
 * Copyright (c) 2014 dianwu; Licensed MIT */
 // DianTW-3588
-function MyCtrl($scope, $http, $route, $routeParams, $location) {
+function MyCtrl($scope, $http, $route, $routeParams, $location, $filter) {
 	var PROFILE_PATH = '/api/d3/profile/',
 		HERO_PATH = '/hero/',
 		ITEM_PATH = '/api/d3/data/',
@@ -25,7 +25,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 	$scope.selectedAttr = '';
 	$scope.itemDatas = {};
 	$scope.itemAttrs = {};
-
+	$scope.stdItemDatas = {};
 	var path;
 
 	this.loadBattleTag = function() {
@@ -54,6 +54,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 			$scope.itemDatas={};
 			angular.forEach(PARTS, function(part) {
 				loadItemDate(data.items[part].tooltipParams);
+				loadStdItemData(data.items[part].id);
 			});
 		}).
 		error(function(data, status, headers, config) {
@@ -88,6 +89,21 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 		});
 	}
 
+	function loadStdItemData(itemId){
+		$http.jsonp(
+			'https://' + $scope.myServer.host + ITEM_PATH + 'item/' + itemId + callBack
+		).
+		success(function(data, status, headers, config) {
+			// this callback will be called asynchronously
+			// when the response is available
+			$scope.stdItemDatas[itemId] = data;
+		}).
+		error(function(data, status, headers, config) {
+			// called asynchronously if an error occurs
+			// or server returns response with an error status.
+		});
+	}
+
 	$scope.selectHero = function() {
 		loadHero($scope.selectedHero.id);
 	};
@@ -96,7 +112,17 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 		return $scope.itemDatas[itemId];
 	}
 
-	$scope.drawAttr = function(v) {
+	$scope.selectAttr = function(v) {
+		// $filter('filter')($scope.itemDatas, function (a){
+		// 	console.log('selectAttr a',a);
+		// }, function (actual, expected){
+		// 	console.log('selectAttr actual',actual);
+		// 	console.log('selectAttr expected',expected);
+		// });
+		drawAttr($scope.selectedAttr);
+	};
+	
+	function drawAttr(v) {
 		var width = 960,
 			height = 500,
 			radius = Math.min(width, height) / 2 - 50;
@@ -221,7 +247,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location) {
 			}).text(function(d) {
 				return $scope.itemDatas[d.data.id].name;
 			});
-	};
+	}
 }
 
 var app = angular.module('MyApp', ['ngRoute']);

@@ -10,16 +10,49 @@ body{
 }
 
 .item{
-	display: inline-block;
-	width: 80px;
-	text-align: center;
+	min-height: 180px;
 }
 .item img{
 	vertical-align: middle;
+	margin: auto;
 }
 .item .item__name{
 	display: inline-block;
 }
 .clear{
 	clear: both;
+}
+.colorfulBg {
+	background: -webkit-linear-gradient(45deg, hsl(307, 45%, 24%) 0%, transparent 70%),
+  				-webkit-linear-gradient(135deg, hsl(187, 76%, 13%) 10%, transparent 80%),
+				-webkit-linear-gradient(225deg, hsl(110, 61%, 15%) 10%, transparent 80%), 
+				-webkit-linear-gradient(315deg, hsl(229, 54%, 20%) 50%, transparent 100%); 
+	background: -ms-linear-gradient(45deg, hsl(307, 45%, 24%) 0%, transparent 70%),
+				-ms-linear-gradient(135deg, hsl(187, 76%, 13%) 10%, transparent 80%), 
+				-ms-linear-gradient(225deg, hsl(110, 61%, 15%) 10%, transparent 80%), 
+				-ms-linear-gradient(315deg, hsl(229, 54%, 20%) 50%, transparent 100%); 
+    background: linear-gradient(45deg, hsl(307, 45%, 24%) 0%, transparent 70%), 
+				linear-gradient(135deg, hsl(187, 76%, 13%) 10%, transparent 80%), 
+				linear-gradient(225deg, hsl(110, 61%, 15%) 10%, transparent 80%), 
+				linear-gradient(315deg, hsl(229, 54%, 20%) 50%, transparent 100%);
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+}
+.heroCt, .itemCt{
+	width: 300px;
+	display: inline-block;
+	float: left;
+}
+.itemCt{
+
+}
+.view{
+	width: 100%;
+	height: 100%;
+	max-width:100%;
+	max-height: 100%;
 }
