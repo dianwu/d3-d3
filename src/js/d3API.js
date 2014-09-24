@@ -22,7 +22,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location, $filter) {
 	$scope.selectedAttr = '';
 	$scope.itemDatas = {};
 	$scope.itemAttrs = {};
-
+	$scope.stdItemDatas = {};
 	var path;
 
 	this.loadBattleTag = function() {
@@ -51,6 +51,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location, $filter) {
 			$scope.itemDatas={};
 			angular.forEach(PARTS, function(part) {
 				loadItemDate(data.items[part].tooltipParams);
+				loadStdItemData(data.items[part].id);
 			});
 		}).
 		error(function(data, status, headers, config) {
@@ -85,6 +86,21 @@ function MyCtrl($scope, $http, $route, $routeParams, $location, $filter) {
 		});
 	}
 
+	function loadStdItemData(itemId){
+		$http.jsonp(
+			'https://' + $scope.myServer.host + ITEM_PATH + 'item/' + itemId + callBack
+		).
+		success(function(data, status, headers, config) {
+			// this callback will be called asynchronously
+			// when the response is available
+			$scope.stdItemDatas[itemId] = data;
+		}).
+		error(function(data, status, headers, config) {
+			// called asynchronously if an error occurs
+			// or server returns response with an error status.
+		});
+	}
+
 	$scope.selectHero = function() {
 		loadHero($scope.selectedHero.id);
 	};
@@ -101,7 +117,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location, $filter) {
 		// 	console.log('selectAttr expected',expected);
 		// });
 		drawAttr($scope.selectedAttr);
-	}
+	};
 	
 	function drawAttr(v) {
 		var width = 960,
@@ -228,7 +244,7 @@ function MyCtrl($scope, $http, $route, $routeParams, $location, $filter) {
 			}).text(function(d) {
 				return $scope.itemDatas[d.data.id].name;
 			});
-	};
+	}
 }
 
 var app = angular.module('MyApp', ['ngRoute']);
