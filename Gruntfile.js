@@ -41,7 +41,10 @@ module.exports = function(grunt) {
         dest: 'dist/js/d3API.js'
       },
       css: {
-        src: ['css/*.css'],
+        src: [
+          'css/bootstrap_theme1.min.css',
+          'css/basic.css'
+        ],
         dest: 'dist/css/all.css'
       }
     },
@@ -78,23 +81,30 @@ module.exports = function(grunt) {
       },
       src: {
         files: '<%= jshint.src.src %>',
-        tasks: ['jshint:src', 'qunit', 'concat','copy'],
-        options:{
-          livereload:true
+        tasks: ['jshint:src', 'qunit', 'concat', 'copy'],
+        options: {
+          livereload: true
         }
       },
       html: {
         files: 'html/*.html',
-        tasks: ['htmlmin','copy'],
-        options:{
-          livereload:true
+        tasks: ['htmlmin', 'copy'],
+        options: {
+          livereload: true
         }
       },
-      css:{
+      libs:{
+        files: 'libs/**/*.js',
+        tasks: ['copy:libs','copy:main'],
+        options: {
+          livereload: true
+        }
+      },
+      css: {
         files: ['css/*.css'],
-        tasks: ['concat:css','copy'],
-        options:{
-          livereload:true
+        tasks: ['concat:css', 'copy'],
+        options: {
+          livereload: true
         }
       },
       test: {
@@ -125,8 +135,19 @@ module.exports = function(grunt) {
           {
             expand: true,
             src: ['**/*'],
-             cwd: 'dist/',
+            cwd: 'dist/',
             dest: 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\htdocs'
+          }
+        ]
+      },
+      libs:{
+        files: [
+          // includes files within path and its sub-directories
+          {
+            expand: true,
+            src: ['**/*'],
+            cwd: 'libs/',
+            dest: 'dist/libs'
           }
         ]
       }
